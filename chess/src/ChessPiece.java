@@ -16,4 +16,8 @@ abstract public class ChessPiece {
         return pos >= 0 && pos <= 7;
     }
 
+    public boolean destinationSameTeam(ChessBoard chessBoard, int toLine, int toColumn) {
+        return chessBoard.board[toLine][toColumn] != null && chessBoard.board[toLine][toColumn].color.equals(getColor());
+    }
+
 }

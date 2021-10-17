@@ -15,6 +15,10 @@ public class Horse extends ChessPiece{
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
 
         if (checkPos(toLine) && checkPos(toColumn)) {
+            if (destinationSameTeam(chessBoard, toLine, toColumn)) {
+                return false;
+            }
+
             return ((abs(line-toLine) == 2 && abs(column-toColumn) == 1) || ((abs(line-toLine) == 1 && abs(column-toColumn) == 2)));
         } else return false;
 

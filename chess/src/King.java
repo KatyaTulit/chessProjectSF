@@ -15,6 +15,10 @@ public class King extends ChessPiece{
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
 
         if (checkPos(toLine) && checkPos(toColumn)) {
+            if (destinationSameTeam(chessBoard, toLine, toColumn)) {
+                return false;
+            }
+
             if ((line != toLine || column != toColumn) && abs(line - toLine) <= 1 && abs(column - toColumn) <= 1) {
                 check = false;
                 return true;
@@ -33,6 +37,17 @@ public class King extends ChessPiece{
         на котором стоит король (или куда собирается пойти) под атакой.
         Если это так, то метод должен вернуть true, иначе — false. Это позволит нам проверять шахи.*/
 
+        for (int l = 0; l <= 7; l++) {
+            for (int c = 0; c <=7; c++) {
+                // not a threat if the same team or an empty cell
+                if (board.board[l][c] != null) {
+                    if (!board.board[l][c].color.equals(getColor()) &&
+                            board.board[l][c].canMoveToPosition(board, l, c, line, column)) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 }
