@@ -56,79 +56,49 @@ public class ChessBoard {
         return pos >= 0 && pos <= 7;
     }
 
-    public boolean castling0() {
-        if (nowPlayer.equals("White")) {
-            if (board[0][0] == null || board[0][4] == null) return false;
-            if (board[0][0].getSymbol().equals("R") && board[0][4].getSymbol().equals("K") && // check that King and Rook
-                    board[0][1] == null && board[0][2] == null && board[0][3] == null) {              // never moved
-                if (board[0][0].getColor().equals("White") && board[0][4].getColor().equals("White") &&
-                        board[0][0].check && board[0][4].check &&
-                        !new King("White").isUnderAttack(this, 0, 2)) { // check that position not in under attack
-                    board[0][4] = null;
-                    board[0][2] = new King("White");   // move King
-                    board[0][2].check = false;
-                    board[0][0] = null;
-                    board[0][3] = new Rook("White");   // move Rook
-                    board[0][3].check = false;
-                    nowPlayer = "Black";  // next turn
-                    return true;
-                } else return false;
+    public boolean castling(boolean kingside) {
+        int line = nowPlayer.equals("White") ? 0 : 7;
+
+        int kingColumn = 4;
+        int rookColumn = kingside ? 0 : 7;
+
+        int newKingColumn = kingside ? 2 : 6;
+        int newRookColumn = kingside ? 3 : 5;
+
+        if (board[line][rookColumn] == null || board[line][kingColumn] == null) return false;
+        if (board[line][rookColumn].getSymbol().equals("R") && board[line][kingColumn].getSymbol().equals("K") && // check that King and Rook
+                checkNoPiecesInBetween(rookColumn, kingColumn, line)) {  // never moved
+            if (board[line][rookColumn].getColor().equals(nowPlayer) && board[line][kingColumn].getColor().equals(nowPlayer) &&
+                    board[line][rookColumn].check && board[line][kingColumn].check &&
+                    !new King(nowPlayer).isUnderAttack(this, line, newKingColumn)) { // check that position not in under attack
+                board[line][kingColumn] = null;
+                board[line][newKingColumn] = new King(nowPlayer);  // move King
+                board[line][newKingColumn].check = false;
+                board[line][rookColumn] = null;
+                board[line][newRookColumn] = new Rook(nowPlayer);  // move Rook
+                board[line][newRookColumn].check = false;
+                nowPlayer = nowPlayer.equals("White") ? "Black" : "White";  // next turn
+                return true;
             } else return false;
-        } else {
-            if (board[7][0] == null || board[7][4] == null) return false;
-            if (board[7][0].getSymbol().equals("R") && board[7][4].getSymbol().equals("K") && // check that King and Rook
-                    board[7][1] == null && board[7][2] == null && board[7][3] == null) {              // never moved
-                if (board[7][0].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
-                        board[7][0].check && board[7][4].check &&
-                        !new King("Black").isUnderAttack(this, 7, 2)) { // check that position not in under attack
-                    board[7][4] = null;
-                    board[7][2] = new King("Black");   // move King
-                    board[7][2].check = false;
-                    board[7][0] = null;
-                    board[7][3] = new Rook("Black");   // move Rook
-                    board[7][3].check = false;
-                    nowPlayer = "White";  // next turn
-                    return true;
-                } else return false;
-            } else return false;
-        }
+        } else return false;
     }
 
-    public boolean castling7() {
-        if (nowPlayer.equals("White")) {
-            if (board[0][7] == null || board[0][4] == null) return false;
-            if (board[0][7].getSymbol().equals("R") && board[0][4].getSymbol().equals("K") && // check that King and Rook
-                    board[0][6] == null && board[0][5] == null) {              // never moved
-                if (board[0][7].getColor().equals("White") && board[0][4].getColor().equals("White") &&
-                        board[0][7].check && board[0][4].check &&
-                        !new King("White").isUnderAttack(this, 0, 6)) { // check that position not in under attack
-                    board[0][4] = null;
-                    board[0][6] = new King("White");   // move King
-                    board[0][6].check = false;
-                    board[0][7] = null;
-                    board[0][5] = new Rook("White");   // move Rook
-                    board[0][5].check = false;
-                    nowPlayer = "Black";  // next turn
-                    return true;
-                } else return false;
-            } else return false;
-        } else {
-            if (board[7][7] == null || board[7][4] == null) return false;
-            if (board[7][7].getSymbol().equals("R") && board[7][4].getSymbol().equals("K") && // check that King and Rook
-                    board[7][6] == null && board[7][5] == null) {              // never moved
-                if (board[7][7].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
-                        board[7][7].check && board[7][4].check &&
-                        !new King("Black").isUnderAttack(this, 7, 6)) { // check that position not in under attack
-                    board[7][4] = null;
-                    board[7][6] = new King("Black");   // move King
-                    board[7][6].check = false;
-                    board[7][7] = null;
-                    board[7][5] = new Rook("Black");   // move Rook
-                    board[7][5].check = false;
-                    nowPlayer = "White";  // next turn
-                    return true;
-                } else return false;
-            } else return false;
+    private boolean checkNoPiecesInBetween(int first, int second, int line) {
+
+        // Check that there are no chess pieces in-between the rook and the king
+
+        if (first > second) {
+            int temp = first;
+            first = second;
+            second = temp;
         }
+
+        for (int i = first+1; i < second; i++) {
+            if (board[line][i] != null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

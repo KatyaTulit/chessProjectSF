@@ -12,22 +12,19 @@ public class Pawn extends ChessPiece {
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
 
-        if (checkPos(toLine) && checkPos(toColumn) && column == toColumn) {
+        if (checkPos(toLine, toColumn) && column == toColumn) {
 
             if (destinationSameTeam(chessBoard, toLine, toColumn)) {
                 return false;
             }
 
-            if (color.equals("White")) {
-                if (line == 1) {
-                    return toLine - line == 1 || (toLine - line == 2 && chessBoard.board[line+1][column] == null);
-                } else return toLine - line == 1;
-            } else if (color.equals("Black")) {
-                if (line == 6) {
-                    return line - toLine == 1 || (line - toLine == 2 && chessBoard.board[line-1][column] == null);
-                } else return line - toLine == 1;
+            int polarity = color.equals("White") ? 1 : -1;
+            int lineStart = color.equals("White") ? 0 : 7;
+            int distance = color.equals("White") ? toLine - line : line - toLine;
 
-            } else return false;
+            if (line == lineStart + polarity) {
+                return distance == 1 || (distance == 2 && chessBoard.board[line + polarity][column] == null);
+            } else return distance == 1;
 
         } else return false;
 
