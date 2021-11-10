@@ -5,4 +5,4 @@ chess/chess.iml
 .idea/runConfigurations.xml
 .idea/modules.xml
 .idea/.gitignore
-/out
+out
