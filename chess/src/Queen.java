@@ -15,7 +15,7 @@ public class Queen extends ChessPiece{
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
 
 
-        if (checkPos(toLine) && checkPos(toColumn)) {
+        if (checkPos(toLine, toColumn)) {
             if (destinationSameTeam(chessBoard, toLine, toColumn)) {
                 return false;
             }

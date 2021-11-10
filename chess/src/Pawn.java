@@ -12,7 +12,7 @@ public class Pawn extends ChessPiece {
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
 
-        if (checkPos(toLine) && checkPos(toColumn) && column == toColumn) {
+        if (checkPos(toLine, toColumn) && column == toColumn) {
 
             if (destinationSameTeam(chessBoard, toLine, toColumn)) {
                 return false;
